@@ -44,6 +44,7 @@ public class Encrypt extends javax.swing.JFrame {
 
         jLabel1.setText("Text:");
 
+        jTextField1.setText("HelloWor");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -59,6 +60,8 @@ public class Encrypt extends javax.swing.JFrame {
 
         jLabel2.setText("Key:");
 
+        jTextField2.setText("Testing1");
+        jTextField2.setToolTipText("");
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField2ActionPerformed(evt);
@@ -67,6 +70,7 @@ public class Encrypt extends javax.swing.JFrame {
 
         jLabel3.setText("Output:");
 
+        jTextField3.setEditable(false);
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField3ActionPerformed(evt);
@@ -131,6 +135,7 @@ public class Encrypt extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        int round = 1;
         int IP[] = {58, 50, 42, 34, 26, 18, 10, 2,60, 52, 44, 36, 28, 20 ,12, 4, 
                     62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8,
                     57, 49, 41, 33, 25, 17, 9, 1, 59, 51, 43, 35, 27, 19, 11, 3, 
@@ -307,13 +312,58 @@ public class Encrypt extends javax.swing.JFrame {
             System.out.print(i);   
         }
         /* /commentable */
-        /* In n<<d, last d bits are 0.  
-          To put first 3 bits of n at 
-           last, do bitwise or of n<<d with 
-          n >>(INT_BITS - d) */
-          //(n << d) | (n >> (INT_BITS - d)); 
-        // for round 1 left shift both halves by 1 bit
+        // left circular shift by 1 bit for 1st round
+        for(int i=0; i<round; i++) {
+            pc1lefthalfbefore = Functions.shiftCircularLeft(pc1lefthalfbefore);
+            pc1righthalfbefore = Functions.shiftCircularLeft(pc1righthalfbefore);
+        }
+        /* commentable */
+        System.out.println("\n\nLeft pc1halfbefore shifted: ");
+        for(int i: pc1lefthalfbefore) {
+            System.out.print(i);   
+        }
+        System.out.println("\n\nRight pc1halfbefore shifted: ");
+        for(int i: pc1righthalfbefore) {
+            System.out.print(i);   
+        }
+        /* /commentable */
         
+        int[] pc1lefthalfafter = pc1lefthalfbefore;
+        int[] pc1righthalfafter = pc1righthalfbefore;
+        
+        // Permuted Choice 2
+        int[] pc2out = new int[48];
+        for(int i=0; i<48; i++) {
+            //System.out.println("PC2["+i+"]: "+PC2[i]);
+            if(PC2[i]>28) {
+                pc2out[i] = pc1righthalfbefore[PC2[i]-28-1];
+            } else {
+                pc2out[i] = pc1lefthalfbefore[PC2[i]-1];
+            }
+        }
+         /* commentable */
+        System.out.println("\n\nPC2 output (Length: "+pc2out.length+"):");
+        for(int i: pc2out) {
+            System.out.print(i);   
+        }
+        /* /commentable */
+        
+        // XOR EP output and PC2 output
+        int[] xoroutput1 = new int[48];
+        
+        for(int i=0; i<48; i++) {
+            xoroutput1[i] = expperm[i] | pc2out[i];
+        }
+         /* commentable */
+        System.out.println("\n\nXOR1 output (Length: "+xoroutput1.length+"):");
+        for(int i: xoroutput1) {
+            System.out.print(i);   
+        }
+        /* /commentable */
+        
+        // S-Box
+      
+        System.out.println();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
