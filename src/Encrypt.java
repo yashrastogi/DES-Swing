@@ -131,10 +131,7 @@ public class Encrypt extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        int IP_Inverse[] = {40, 8, 48, 16, 56, 24, 64,32, 39, 7, 47, 15, 55, 23, 63, 31,
-                            38, 6, 46, 14, 54, 22, 62, 30,37, 5, 45, 13,53, 21, 61, 29,
-                            36, 4, 44, 12, 52, 20, 60, 28,35, 3, 43, 11, 51, 19, 59, 27,
-                            34, 2, 42, 10, 50, 18, 58, 26,33, 1, 41, 9, 49, 17, 57, 25};
+        
     }//GEN-LAST:event_jTextField3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -231,7 +228,7 @@ public class Encrypt extends javax.swing.JFrame {
             int cipherTextLen = output[0].length+output[1].length;
             int keyLen = output[2].length+output[3].length;
             
-            System.out.println("\nOutput of Round "+round+":\nCipherText ("+cipherTextLen+"):");
+            System.out.println("\n\nOutput of Round "+round+":\nCipherText ("+cipherTextLen+"):");
             for(int i: output[0]) {
                 System.out.print(i);
             }
@@ -249,8 +246,12 @@ public class Encrypt extends javax.swing.JFrame {
             } 
         }
         
-        
-        
+        int binOutput[] = SingleRoundEncryption.finalRoundDES(output);
+        System.out.println("\n\nFinal CipherText Output in Binary:");
+        for(int i: binOutput) {
+                System.out.print(i);
+            }
+                
         System.out.println();
     }//GEN-LAST:event_jButton1ActionPerformed
 
