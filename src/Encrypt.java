@@ -148,10 +148,6 @@ public class Encrypt extends javax.swing.JFrame {
                     8, 9, 10, 11, 12, 13, 12, 13, 14, 15, 16, 17, 
                    16, 17, 18, 19, 20, 21, 20, 21, 22, 23, 24, 25, 
                    24, 25, 26, 27, 28, 29, 28, 29, 30, 31, 32 ,1}; /*  */
-	int P[] = {16, 7, 20, 21, 29, 12, 28, 17, 
-                    1, 15, 23, 26, 5, 18, 31, 10, 
-                    2, 8, 24, 14, 32, 27, 3, 9, 
-                   19, 13, 30, 6, 22, 11, 4, 25}; /*  */
 	int PC1[] = {57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26, 18, 
                      10, 2, 59, 51, 43, 35, 27, 19, 11, 3, 60, 52, 44, 36, 
                      63, 55, 47, 39, 31, 23, 15, 7, 62, 54, 46, 38, 30, 22, 
@@ -235,9 +231,6 @@ public class Encrypt extends javax.swing.JFrame {
         }
         /* /commentable */
         
-        // copy right half 32 bits to left half
-        int[] lefthalfafterin = righthalfbeforein;
-        
         // perform expansion permutation of right half
         int[] expperm = new int[48];
         for(int i=0; i<48; i++) {
@@ -316,11 +309,8 @@ public class Encrypt extends javax.swing.JFrame {
         /* /commentable */
         
         // XOR EP output and PC2 output
-        int[] xoroutput1 = new int[48];
-        
-        for(int i=0; i<48; i++) {
-            xoroutput1[i] = expperm[i] | pc2out[i];
-        }
+        int[] xoroutput1 = Functions.XOR(expperm, pc2out);
+
          /* commentable */
         System.out.println("\n\nXOR1 output (Length: "+xoroutput1.length+"):");
         for(int i: xoroutput1) {
@@ -336,6 +326,29 @@ public class Encrypt extends javax.swing.JFrame {
             System.out.print(i);   
         }
         /* /commentable */
+        
+        // Permutation after S
+        int[] pOut = Functions.permutationFunction(sboxOut);
+        /* commentable */
+        System.out.println("\n\nPermutation output (Length: "+pOut.length+"):");
+        for(int i: pOut) {
+            System.out.print(i);   
+        }
+        /* /commentable */
+        
+        // XOR Permutation2 and Left Half Before/Initial
+        int[] xorOutput2 = Functions.XOR(pOut, lefthalfbeforein);
+        /* commentable */
+        System.out.println("\n\nXOR2 output (Length: "+xorOutput2.length+"):");
+        for(int i: xorOutput2) {
+            System.out.print(i);   
+        }
+        /* /commentable */
+        
+        // copy right half 32 bits to left half
+        int[] lefthalfafterin = righthalfbeforein;
+        int[] righthalfafterin = xorOutput2;
+        
         
         System.out.println();
     }//GEN-LAST:event_jButton1ActionPerformed

@@ -110,4 +110,27 @@ public class Functions {
         }
         return sboxOut;
     }
+    
+    public static int[] permutationFunction(int[] sboxIn) {
+        int P[] = {16, 7, 20, 21, 29, 12, 28, 17, 
+                    1, 15, 23, 26, 5, 18, 31, 10, 
+                    2, 8, 24, 14, 32, 27, 3, 9, 
+                   19, 13, 30, 6, 22, 11, 4, 25};
+        int[] pOut = new int[sboxIn.length];
+        for(int i=0; i<sboxIn.length; i++) {
+            pOut[P[i]-1] = sboxIn[i]; 
+        }
+        return pOut;
+    }
+    
+    public static int[] XOR(int[] bits1, int[] bits2) {
+        int[] xorOut = new int[bits1.length];
+        if(bits1.length!=bits2.length) {
+            return null;
+        }
+        for(int i=0; i<bits1.length; i++) {
+            xorOut[i] = bits1[i] | bits2[i];
+        }
+        return xorOut;
+    }
 }
