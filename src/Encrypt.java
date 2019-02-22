@@ -131,31 +131,23 @@ public class Encrypt extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int round = 1;
-        int IP[] = {58, 50, 42, 34, 26, 18, 10, 2,60, 52, 44, 36, 28, 20 ,12, 4, 
-                    62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8,
-                    57, 49, 41, 33, 25, 17, 9, 1, 59, 51, 43, 35, 27, 19, 11, 3, 
-                    61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7};
         int IP_Inverse[] = {40, 8, 48, 16, 56, 24, 64,32, 39, 7, 47, 15, 55, 23, 63, 31,
                             38, 6, 46, 14, 54, 22, 62, 30,37, 5, 45, 13,53, 21, 61, 29,
                             36, 4, 44, 12, 52, 20, 60, 28,35, 3, 43, 11, 51, 19, 59, 27,
                             34, 2, 42, 10, 50, 18, 58, 26,33, 1, 41, 9, 49, 17, 57, 25};
-        int E[] = {32, 1, 2, 3, 4, 5, 4, 5, 6, 7, 8, 9, 
-                    8, 9, 10, 11, 12, 13, 12, 13, 14, 15, 16, 17, 
-                   16, 17, 18, 19, 20, 21, 20, 21, 22, 23, 24, 25, 
-                   24, 25, 26, 27, 28, 29, 28, 29, 30, 31, 32 ,1}; /*  */
+    }//GEN-LAST:event_jTextField3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        int IP[] = {58, 50, 42, 34, 26, 18, 10, 2,60, 52, 44, 36, 28, 20 ,12, 4, 
+                    62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8,
+                    57, 49, 41, 33, 25, 17, 9, 1, 59, 51, 43, 35, 27, 19, 11, 3, 
+                    61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7};
+
 	int PC1[] = {57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26, 18, 
                      10, 2, 59, 51, 43, 35, 27, 19, 11, 3, 60, 52, 44, 36, 
                      63, 55, 47, 39, 31, 23, 15, 7, 62, 54, 46, 38, 30, 22, 
-                     14, 6, 61, 53, 45, 37, 29, 21, 13, 5, 28, 20, 12, 4}; /*  */
-	int PC2[] = {14, 17, 11, 24, 1, 5, 3, 28, 15, 6, 21, 10, 
-                     23, 19, 12 ,4, 26, 8, 16, 7, 27, 20, 13, 2, 
-                     41, 52, 31, 37, 47, 55, 30, 40, 51, 45, 33, 48, 
-                     44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32}; /*  */
+                     14, 6, 61, 53, 45, 37, 29, 21, 13, 5, 28, 20, 12, 4};
+	
         String input = jTextField1.getText();
         String key = jTextField2.getText();
         StringBuilder inputbin = new StringBuilder();
@@ -208,146 +200,55 @@ public class Encrypt extends javax.swing.JFrame {
         for(int i=0; i<64; i++) {
             ipout[IP[i]-1] = Character.getNumericValue(inputbin.charAt(i));
         }
-        /* commentable */
-        System.out.println("Initial permutation output:");
-        for(int i: ipout) {
-            System.out.print(i);   
-        }
-        /* /commentable */
-        int[] lefthalfbeforein = new int[32];
-        int[] righthalfbeforein = new int[32];
-        for(int i=0; i<32; i++) {
-            lefthalfbeforein[i] = ipout[i];
-            righthalfbeforein[i] = ipout[i+32];
-        }
-        /* commentable */
-        System.out.println("\n\nLeft halfbeforein: ");
-        for(int i: lefthalfbeforein) {
-            System.out.print(i);   
-        }
-        System.out.println("\n\nRight halfbeforein: ");
-        for(int i: righthalfbeforein) {
-            System.out.print(i);   
-        }
-        /* /commentable */
+//        /* commentable */
+//        System.out.println("Initial permutation output:");
+//        for(int i: ipout) {
+//            System.out.print(i);   
+//        }
+//        /* /commentable */
         
-        // perform expansion permutation of right half
-        int[] expperm = new int[48];
-        for(int i=0; i<48; i++) {
-            expperm[i] = righthalfbeforein[E[i]-1]; 
-        }
-         /* commentable */
-        System.out.println("\n\nExpansion permutation output:");
-        for(int i: expperm) {
-            System.out.print(i);   
-        }
-        System.out.println();
-        /* /commentable */
-        // Done till expansion permutation, key part begins
         // PC1
         int[] pc1out = new int[56];
         for(int i=0; i<56; i++) {
             pc1out[i] = Character.getNumericValue(keybin.charAt(PC1[i]-1));
         }
-         /* commentable */
-        System.out.println("\n\nPC1 output (Length: "+pc1out.length+"):");
-        for(int i: pc1out) {
-            System.out.print(i);   
-        }
-        System.out.println();
-        /* /commentable */
-        int[] pc1lefthalfbefore = new int[28];
-        int[] pc1righthalfbefore = new int[28];
-        for (int i=0; i<28; i++) {
-            pc1lefthalfbefore[i] = pc1out[i];
-            pc1righthalfbefore[i] = pc1out[i+28];
-        }
-        /* commentable */
-        System.out.println("\n\nLeft pc1halfbefore: ");
-        for(int i: pc1lefthalfbefore) {
-            System.out.print(i);   
-        }
-        System.out.println("\n\nRight pc1halfbefore: ");
-        for(int i: pc1righthalfbefore) {
-            System.out.print(i);   
-        }
-        /* /commentable */
-        // left circular shift by 1 bit for 1st round
-        for(int i=0; i<round; i++) {
-            pc1lefthalfbefore = Functions.shiftCircularLeft(pc1lefthalfbefore);
-            pc1righthalfbefore = Functions.shiftCircularLeft(pc1righthalfbefore);
-        }
-        /* commentable */
-        System.out.println("\n\nLeft pc1halfbefore shifted: ");
-        for(int i: pc1lefthalfbefore) {
-            System.out.print(i);   
-        }
-        System.out.println("\n\nRight pc1halfbefore shifted: ");
-        for(int i: pc1righthalfbefore) {
-            System.out.print(i);   
-        }
-        /* /commentable */
+//         /* commentable */
+//        System.out.println("\n\nPC1 output (Length: "+pc1out.length+"):");
+//        for(int i: pc1out) {
+//            System.out.print(i);   
+//        }
+//         /* /commentable */
         
-        int[] pc1lefthalfafter = pc1lefthalfbefore;
-        int[] pc1righthalfafter = pc1righthalfbefore;
-        
-        // Permuted Choice 2
-        int[] pc2out = new int[48];
-        for(int i=0; i<48; i++) {
-            //System.out.println("PC2["+i+"]: "+PC2[i]);
-            if(PC2[i]>28) {
-                pc2out[i] = pc1righthalfbefore[PC2[i]-28-1];
-            } else {
-                pc2out[i] = pc1lefthalfbefore[PC2[i]-1];
+        int output[][] = null;
+        for(int round=1; round<=16; round++) {
+            if(round == 1) {
+                output = SingleRoundEncryption.firstRoundDES(round, pc1out, ipout);
             }
+            else {
+                output = SingleRoundEncryption.nRoundDES(round, output);
+            }
+            
+            int cipherTextLen = output[0].length+output[1].length;
+            int keyLen = output[2].length+output[3].length;
+            
+            System.out.println("\nOutput of Round "+round+":\nCipherText ("+cipherTextLen+"):");
+            for(int i: output[0]) {
+                System.out.print(i);
+            }
+            System.out.print(" ");
+            for(int i: output[1]) {
+                System.out.print(i);
+            } 
+            System.out.println("\nKey ("+keyLen+"):");
+            for(int i: output[2]) {
+                System.out.print(i);
+            }
+            System.out.print(" ");
+            for(int i: output[3]) {
+                System.out.print(i);
+            } 
         }
-         /* commentable */
-        System.out.println("\n\nPC2 output (Length: "+pc2out.length+"):");
-        for(int i: pc2out) {
-            System.out.print(i);   
-        }
-        /* /commentable */
         
-        // XOR EP output and PC2 output
-        int[] xoroutput1 = Functions.XOR(expperm, pc2out);
-
-         /* commentable */
-        System.out.println("\n\nXOR1 output (Length: "+xoroutput1.length+"):");
-        for(int i: xoroutput1) {
-            System.out.print(i);   
-        }
-        /* /commentable */
-        
-        // S-Box
-        int[] sboxOut = Functions.sBox(xoroutput1);
-        /* commentable */
-        System.out.println("\n\nSBOX output (Length: "+sboxOut.length+"):");
-        for(int i: sboxOut) {
-            System.out.print(i);   
-        }
-        /* /commentable */
-        
-        // Permutation after S
-        int[] pOut = Functions.permutationFunction(sboxOut);
-        /* commentable */
-        System.out.println("\n\nPermutation output (Length: "+pOut.length+"):");
-        for(int i: pOut) {
-            System.out.print(i);   
-        }
-        /* /commentable */
-        
-        // XOR Permutation2 and Left Half Before/Initial
-        int[] xorOutput2 = Functions.XOR(pOut, lefthalfbeforein);
-        /* commentable */
-        System.out.println("\n\nXOR2 output (Length: "+xorOutput2.length+"):");
-        for(int i: xorOutput2) {
-            System.out.print(i);   
-        }
-        /* /commentable */
-        
-        // copy right half 32 bits to left half
-        int[] lefthalfafterin = righthalfbeforein;
-        int[] righthalfafterin = xorOutput2;
         
         
         System.out.println();
