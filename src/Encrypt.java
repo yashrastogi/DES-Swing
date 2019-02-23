@@ -1,4 +1,5 @@
 
+import java.math.BigInteger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -42,9 +43,9 @@ public class Encrypt extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("DES Encryptor");
 
-        jLabel1.setText("Text:");
+        jLabel1.setText("Text (Hex):");
 
-        jTextField1.setText("HelloWor");
+        jTextField1.setText("02468aceeca86420");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -58,9 +59,9 @@ public class Encrypt extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Key:");
+        jLabel2.setText("Key (Hex):");
 
-        jTextField2.setText("Testing1");
+        jTextField2.setText("0f1571c947d9e859");
         jTextField2.setToolTipText("");
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -145,32 +146,38 @@ public class Encrypt extends javax.swing.JFrame {
                      63, 55, 47, 39, 31, 23, 15, 7, 62, 54, 46, 38, 30, 22, 
                      14, 6, 61, 53, 45, 37, 29, 21, 13, 5, 28, 20, 12, 4};
 	
-        String input = jTextField1.getText();
-        String key = jTextField2.getText();
-        StringBuilder inputbin = new StringBuilder();
-        // Convert text to byte to binary
-        byte[] bytes = input.getBytes();
-        for(byte b: bytes) {
-            int temp = b;
-            // Test highest bit, if set then append 1 else 0... then left shift
-            for(int i=0; i<8; i++) {
-                inputbin.append((temp & 128) == 0 ? 0 : 1);
-                temp <<= 1;
-            }
-        }
-        StringBuilder keybin = new StringBuilder();
-        bytes = key.getBytes();
-        for(byte b: bytes) {
-            int temp = b;
-            // Test highest bit, if set then append 1 else 0... then left shift
-            for(int i=0; i<8; i++) {
-                keybin.append((temp & 128) == 0 ? 0 : 1);
-                temp <<= 1;
-            }
-        }
+//        String input = jTextField1.getText();
+//        String key = jTextField2.getText();
+        
+        BigInteger input = new BigInteger(jTextField1.getText(), 16);
+        BigInteger key = new BigInteger(jTextField2.getText(), 16);
+        
+        StringBuilder inputbin = new StringBuilder(input.toString(2));
+        StringBuilder keybin = new StringBuilder(key.toString(2));
+//        StringBuilder inputbin = new StringBuilder();
+//        // Convert text to byte to binary
+//        byte[] bytes = input.getBytes();
+//        for(byte b: bytes) {
+//            int temp = b;
+//            // Test highest bit, if set then append 1 else 0... then left shift
+//            for(int i=0; i<8; i++) {
+//                inputbin.append((temp & 128) == 0 ? 0 : 1);
+//                temp <<= 1;
+//            }
+//        }
+//        StringBuilder keybin = new StringBuilder();
+//        bytes = key.getBytes();
+//        for(byte b: bytes) {
+//            int temp = b;
+//            // Test highest bit, if set then append 1 else 0... then left shift
+//            for(int i=0; i<8; i++) {
+//                keybin.append((temp & 128) == 0 ? 0 : 1);
+//                temp <<= 1;
+//            }
+//        }
         
         if(inputbin.length()>64 || keybin.length()>64) {
-            JOptionPane.showMessageDialog(rootPane, "Please enter 8 characters of data only");
+            JOptionPane.showMessageDialog(rootPane, "Please enter 8 bytes of data only");
             this.dispose();
             JFrame encrypt = new Encrypt();
             encrypt.setVisible(true);
@@ -228,30 +235,32 @@ public class Encrypt extends javax.swing.JFrame {
             int cipherTextLen = output[0].length+output[1].length;
             int keyLen = output[2].length+output[3].length;
             
-            System.out.println("\n\nOutput of Round "+round+":\nCipherText ("+cipherTextLen+"):");
-            for(int i: output[0]) {
-                System.out.print(i);
-            }
-            System.out.print(" ");
-            for(int i: output[1]) {
-                System.out.print(i);
-            } 
-            System.out.println("\nKey ("+keyLen+"):");
-            for(int i: output[2]) {
-                System.out.print(i);
-            }
-            System.out.print(" ");
-            for(int i: output[3]) {
-                System.out.print(i);
-            } 
+//            System.out.println("\n\nOutput of Round "+round+":\nCipherText ("+cipherTextLen+"):");
+//            for(int i: output[0]) {
+//                System.out.print(i);
+//            }
+//            System.out.print(" ");
+//            for(int i: output[1]) {
+//                System.out.print(i);
+//            } 
+//            System.out.println("\nKey ("+keyLen+"):");
+//            for(int i: output[2]) {
+//                System.out.print(i);
+//            }
+//            System.out.print(" ");
+//            for(int i: output[3]) {
+//                System.out.print(i);
+//            } 
         }
         
         int binOutput[] = SingleRoundEncryption.finalRoundDES(output);
-        System.out.println("\n\nFinal CipherText Output in Binary:");
-        for(int i: binOutput) {
-                System.out.print(i);
-            }
-                
+       
+        StringBuilder binOut = new StringBuilder();
+        for(int i=0; i<binOutput.length; i++) {
+            binOut.append(binOutput[i]);
+        }
+        BigInteger tempout = new BigInteger(""+binOut, 2);
+        jTextField3.setText(tempout.toString(16));
         System.out.println();
     }//GEN-LAST:event_jButton1ActionPerformed
 
