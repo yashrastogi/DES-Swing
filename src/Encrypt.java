@@ -136,45 +136,10 @@ public class Encrypt extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int IP[] = {58, 50, 42, 34, 26, 18, 10, 2,60, 52, 44, 36, 28, 20 ,12, 4, 
-                    62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8,
-                    57, 49, 41, 33, 25, 17, 9, 1, 59, 51, 43, 35, 27, 19, 11, 3, 
-                    61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7};
-
-	int PC1[] = {57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26, 18, 
-                     10, 2, 59, 51, 43, 35, 27, 19, 11, 3, 60, 52, 44, 36, 
-                     63, 55, 47, 39, 31, 23, 15, 7, 62, 54, 46, 38, 30, 22, 
-                     14, 6, 61, 53, 45, 37, 29, 21, 13, 5, 28, 20, 12, 4};
-	
-//        String input = jTextField1.getText();
-//        String key = jTextField2.getText();
-        
         BigInteger input = new BigInteger(jTextField1.getText(), 16);
         BigInteger key = new BigInteger(jTextField2.getText(), 16);
-        
         StringBuilder inputbin = new StringBuilder(input.toString(2));
         StringBuilder keybin = new StringBuilder(key.toString(2));
-//        StringBuilder inputbin = new StringBuilder();
-//        // Convert text to byte to binary
-//        byte[] bytes = input.getBytes();
-//        for(byte b: bytes) {
-//            int temp = b;
-//            // Test highest bit, if set then append 1 else 0... then left shift
-//            for(int i=0; i<8; i++) {
-//                inputbin.append((temp & 128) == 0 ? 0 : 1);
-//                temp <<= 1;
-//            }
-//        }
-//        StringBuilder keybin = new StringBuilder();
-//        bytes = key.getBytes();
-//        for(byte b: bytes) {
-//            int temp = b;
-//            // Test highest bit, if set then append 1 else 0... then left shift
-//            for(int i=0; i<8; i++) {
-//                keybin.append((temp & 128) == 0 ? 0 : 1);
-//                temp <<= 1;
-//            }
-//        }
         
         if(inputbin.length()>64 || keybin.length()>64) {
             JOptionPane.showMessageDialog(rootPane, "Please enter 8 bytes of data only");
@@ -196,61 +161,25 @@ public class Encrypt extends javax.swing.JFrame {
               //  keybin.reverse();
             }
         }
-        System.out.println("\n\n\n\n\nInput converted to "+inputbin+"\nLength of this is: "+inputbin.length());
-        System.out.println("Key converted to   "+keybin+"\nLength of this is: "+keybin.length());
 
-        // perform initial permutation
-        int[] ipout = new int[64];
-        for(int i=0; i<64; i++) {
-            ipout[IP[i]-1] = Character.getNumericValue(inputbin.charAt(i));
-        }
-//        /* commentable */
-//        System.out.println("Initial permutation output:");
-//        for(int i: ipout) {
-//            System.out.print(i);   
-//        }
-//        /* /commentable */
-        
-        // PC1
-        int[] pc1out = new int[56];
-        for(int i=0; i<56; i++) {
-            pc1out[i] = Character.getNumericValue(keybin.charAt(PC1[i]-1));
-        }
-//         /* commentable */
-//        System.out.println("\n\nPC1 output (Length: "+pc1out.length+"):");
-//        for(int i: pc1out) {
-//            System.out.print(i);   
-//        }
-//         /* /commentable */
-        
         int output[][] = null;
         for(int round=1; round<=16; round++) {
             if(round == 1) {
-                output = SingleRoundEncryption.firstRoundDES(round, pc1out, ipout);
+                output = SingleRoundEncryption.initDES(inputbin, keybin);
             }
-            else {
-                output = SingleRoundEncryption.nRoundDES(round, output);
+            output = SingleRoundEncryption.nRoundDES(round, output);
+            
+            System.out.print("Hex output (Round "+round+"): ");
+            StringBuilder binOut = new StringBuilder();
+            for(int i=0; i<64; i++) {
+                if(i<32) {
+                    binOut.append(output[0][i]);
+                } else {
+                    binOut.append(output[1][i-32]);
+                }
             }
-            
-            int cipherTextLen = output[0].length+output[1].length;
-            int keyLen = output[2].length+output[3].length;
-            
-//            System.out.println("\n\nOutput of Round "+round+":\nCipherText ("+cipherTextLen+"):");
-//            for(int i: output[0]) {
-//                System.out.print(i);
-//            }
-//            System.out.print(" ");
-//            for(int i: output[1]) {
-//                System.out.print(i);
-//            } 
-//            System.out.println("\nKey ("+keyLen+"):");
-//            for(int i: output[2]) {
-//                System.out.print(i);
-//            }
-//            System.out.print(" ");
-//            for(int i: output[3]) {
-//                System.out.print(i);
-//            } 
+            BigInteger tempout = new BigInteger(""+binOut, 2);
+            System.out.println(tempout.toString(16)+"\n");
         }
         
         int binOutput[] = SingleRoundEncryption.finalRoundDES(output);

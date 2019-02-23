@@ -21,140 +21,43 @@ public class SingleRoundEncryption {
                             38, 6, 46, 14, 54, 22, 62, 30,37, 5, 45, 13,53, 21, 61, 29,
                             36, 4, 44, 12, 52, 20, 60, 28,35, 3, 43, 11, 51, 19, 59, 27,
                             34, 2, 42, 10, 50, 18, 58, 26,33, 1, 41, 9, 49, 17, 57, 25};
+    static int IP[] = {58, 50, 42, 34, 26, 18, 10, 2,60, 52, 44, 36, 28, 20 ,12, 4, 
+                    62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8,
+                    57, 49, 41, 33, 25, 17, 9, 1, 59, 51, 43, 35, 27, 19, 11, 3, 
+                    61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7};
+
+    static int PC1[] = {57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26, 18, 
+                     10, 2, 59, 51, 43, 35, 27, 19, 11, 3, 60, 52, 44, 36, 
+                     63, 55, 47, 39, 31, 23, 15, 7, 62, 54, 46, 38, 30, 22, 
+                     14, 6, 61, 53, 45, 37, 29, 21, 13, 5, 28, 20, 12, 4};
     
-    public static int[][] firstRoundDES(int round, int[] pc1out, int[] ipout) {
-        int[] pc1lefthalfbefore = new int[28];
-        int[] pc1righthalfbefore = new int[28];
+    public static int[][] initDES(StringBuilder inputbin, StringBuilder keybin) {
+        // perform initial permutation
+        int[] ipout = new int[64];
+        for(int i=0; i<64; i++) {
+            ipout[IP[i]-1] = Character.getNumericValue(inputbin.charAt(i));
+        }
+        
+        // PC1
+        int[] pc1out = new int[56];
+        for(int i=0; i<56; i++) {
+            pc1out[i] = Character.getNumericValue(keybin.charAt(PC1[i]-1));
+        }
+
+        // Split PC1 in 2 parts
+        int[] lefthalfafterkey = new int[28];
+        int[] righthalfafterkey = new int[28];
         for (int i=0; i<28; i++) {
-            pc1lefthalfbefore[i] = pc1out[i];
-            pc1righthalfbefore[i] = pc1out[i+28];
+            lefthalfafterkey[i] = pc1out[i];
+            righthalfafterkey[i] = pc1out[i+28];
         }
-//        /* commentable */
-//        System.out.println("\n\nLeft pc1halfbefore: ");
-//        for(int i: pc1lefthalfbefore) {
-//            System.out.print(i);   
-//        }
-//        System.out.println("\n\nRight pc1halfbefore: ");
-//        for(int i: pc1righthalfbefore) {
-//            System.out.print(i);   
-//        }
-//        /* /commentable */
-        // left circular shift by 1 bit for 1st round
-        for(int i=0; i<round; i++) {
-            pc1lefthalfbefore = Functions.shiftCircularLeft(pc1lefthalfbefore);
-            pc1righthalfbefore = Functions.shiftCircularLeft(pc1righthalfbefore);
-        }
-//        /* commentable */
-//        System.out.println("\n\nLeft pc1halfbefore shifted: ");
-//        for(int i: pc1lefthalfbefore) {
-//            System.out.print(i);   
-//        }
-//        System.out.println("\n\nRight pc1halfbefore shifted: ");
-//        for(int i: pc1righthalfbefore) {
-//            System.out.print(i);   
-//        }
-//        /* /commentable */
-        int[] lefthalfbeforein = new int[32];
-        int[] righthalfbeforein = new int[32];
+        // Split Input after IP in 2 parts and feed both to nth round function
+        int[] lefthalfafterin = new int[32];
+        int[] righthalfafterin = new int[32];
         for(int i=0; i<32; i++) {
-            lefthalfbeforein[i] = ipout[i];
-            righthalfbeforein[i] = ipout[i+32];
+            lefthalfafterin[i] = ipout[i];
+            righthalfafterin[i] = ipout[i+32];
         }
-//        /* commentable */
-//        System.out.println("\n\nLeft halfbeforein: ");
-//        for(int i: lefthalfbeforein) {
-//            System.out.print(i);   
-//        }
-//        System.out.println("\n\nRight halfbeforein: ");
-//        for(int i: righthalfbeforein) {
-//            System.out.print(i);   
-//        }
-//        /* /commentable */
-        
-        // perform expansion permutation of right half
-        int[] expperm = new int[48];
-        for(int i=0; i<48; i++) {
-            expperm[i] = righthalfbeforein[E[i]-1]; 
-        }
-//         /* commentable */
-//        System.out.println("\n\nExpansion permutation output:");
-//        for(int i: expperm) {
-//            System.out.print(i);   
-//        }
-//        System.out.println();
-//        /* /commentable */
-        // Done till expansion permutation, key part begins
-        
-        
-        // Permuted Choice 2
-        int[] pc2out = new int[48];
-        for(int i=0; i<48; i++) {
-            //System.out.println("PC2["+i+"]: "+PC2[i]);
-            if(PC2[i]>28) {
-                pc2out[i] = pc1righthalfbefore[PC2[i]-28-1];
-            } else {
-                pc2out[i] = pc1lefthalfbefore[PC2[i]-1];
-            }
-        }
-//         /* commentable */
-//        System.out.println("\n\nPC2 output (Length: "+pc2out.length+"):");
-//        for(int i: pc2out) {
-//            System.out.print(i);   
-//        }
-//        /* /commentable */
-        
-        // Back to input 
-        
-        // XOR EP output and PC2 output
-        int[] xoroutput1 = Functions.XOR(expperm, pc2out);
-
-//         /* commentable */
-//        System.out.println("\n\nXOR1 output (Length: "+xoroutput1.length+"):");
-//        for(int i: xoroutput1) {
-//            System.out.print(i);   
-//        }
-//        /* /commentable */
-        
-        // S-Box
-        int[] sboxOut = Functions.sBox(xoroutput1);
-//        /* commentable */
-//        System.out.println("\n\nSBOX output (Length: "+sboxOut.length+"):");
-//        for(int i: sboxOut) {
-//            System.out.print(i);   
-//        }
-//        /* /commentable */
-
-        // Permutation after S
-        int[] pOut = Functions.permutationFunction(sboxOut);
-//        /* commentable */
-//        System.out.println("\n\nPermutation output (Length: "+pOut.length+"):");
-//        for(int i: pOut) {
-//            System.out.print(i);   
-//        }
-//        /* /commentable */
-        
-        // XOR Permutation2 and Left Half Before/Initial
-        int[] xorOutput2 = Functions.XOR(pOut, lefthalfbeforein);
-        
-//        /* commentable */
-//        System.out.println("\n\nXOR2 output/Right Half After (Length: "+xorOutput2.length+"):");
-//        for(int i: xorOutput2) {
-//            System.out.print(i);   
-//        }
-//        
-//        System.out.println("\n\nLeft Half After (Length: "+righthalfbeforein.length+"):");
-//        for(int i: righthalfbeforein) {
-//            System.out.print(i); 
-//        }
-//        /* /commentable */
- 
-        // copy right half 32 bits to left half
-        int[] lefthalfafterin = righthalfbeforein;
-        int[] righthalfafterin = xorOutput2;
-        
-        int[] lefthalfafterkey = pc1lefthalfbefore;
-        int[] righthalfafterkey = pc1righthalfbefore;
-        
         int[][] out = new int[4][];
         out[0] = lefthalfafterin;
         out[1] = righthalfafterin;
@@ -163,6 +66,7 @@ public class SingleRoundEncryption {
         
         return out;
     }
+    
     public static int[][] nRoundDES(int round, int[][] in) {
         int[] lefthalfbeforein = in[0];
         int[] righthalfbeforein = in[1];
@@ -180,15 +84,8 @@ public class SingleRoundEncryption {
         for(int i=0; i<48; i++) {
             expperm[i] = righthalfbeforein[E[i]-1]; 
         }
-//         /* commentable */
-//        System.out.println("\n\nExpansion permutation output:");
-//        for(int i: expperm) {
-//            System.out.print(i);   
-//        }
-//        System.out.println();
-//        /* /commentable */
-        // Done till expansion permutation, key part begins
         
+        // Expansion permutation for input done, move to key PC2 function
         
         // Permuted Choice 2
         int[] pc2out = new int[48];
@@ -200,58 +97,21 @@ public class SingleRoundEncryption {
                 pc2out[i] = lefthalfbeforekey[PC2[i]-1];
             }
         }
-//         /* commentable */
-//        System.out.println("\n\nPC2 output (Length: "+pc2out.length+"):");
-//        for(int i: pc2out) {
-//            System.out.print(i);   
-//        }
-//        /* /commentable */
         
         // Back to input 
         
         // XOR EP output and PC2 output
         int[] xoroutput1 = Functions.XOR(expperm, pc2out);
-
-//         /* commentable */
-//        System.out.println("\n\nXOR1 output (Length: "+xoroutput1.length+"):");
-//        for(int i: xoroutput1) {
-//            System.out.print(i);   
-//        }
-//        /* /commentable */
         
         // S-Box
         int[] sboxOut = Functions.sBox(xoroutput1);
-//        /* commentable */
-//        System.out.println("\n\nSBOX output (Length: "+sboxOut.length+"):");
-//        for(int i: sboxOut) {
-//            System.out.print(i);   
-//        }
-//        /* /commentable */
-        
+
         // Permutation after S
         int[] pOut = Functions.permutationFunction(sboxOut);
-//        /* commentable */
-//        System.out.println("\n\nPermutation output (Length: "+pOut.length+"):");
-//        for(int i: pOut) {
-//            System.out.print(i);   
-//        }
-//        /* /commentable */
-//        
+
         // XOR Permutation2 and Left Half Before/Initial
         int[] xorOutput2 = Functions.XOR(pOut, lefthalfbeforein);
-        
-//        /* commentable */
-//        System.out.println("\n\nXOR2 output/Right Half After (Length: "+xorOutput2.length+"):");
-//        for(int i: xorOutput2) {
-//            System.out.print(i);   
-//        }
-//        
-//        System.out.println("\n\nLeft Half After (Length: "+righthalfbeforein.length+"):");
-//        for(int i: righthalfbeforein) {
-//            System.out.print(i); 
-//        }
-//        /* /commentable */
- 
+
         // copy right half 32 bits to left half
         int[] lefthalfafterin = righthalfbeforein;
         int[] righthalfafterin = xorOutput2;
@@ -276,8 +136,6 @@ public class SingleRoundEncryption {
         int[] temp = righthalfbeforein;
         righthalfbeforein = lefthalfbeforein;
         lefthalfbeforein = temp;
-        
-        
         
         // IP Inverse
         int[] ipInverseOut = new int[64];
