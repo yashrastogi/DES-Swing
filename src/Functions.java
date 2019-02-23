@@ -124,12 +124,13 @@ public class Functions {
     }
     
     public static int[] XOR(int[] bits1, int[] bits2) {
+        // XOR same length Binary int arrays
         int[] xorOut = new int[bits1.length];
         if(bits1.length!=bits2.length) {
             return null;
         }
         for(int i=0; i<bits1.length; i++) {
-            xorOut[i] = bits1[i] | bits2[i];
+            xorOut[i] = bits1[i] ^ bits2[i];
         }
         return xorOut;
     }
