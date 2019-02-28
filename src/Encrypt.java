@@ -171,18 +171,7 @@ public class Encrypt extends javax.swing.JFrame {
                 output = SingleRoundEncryption.initDES(inputbin, keybin);
             }
             output = SingleRoundEncryption.nRoundDES(round, output);
-            
-            System.out.print("Hex output (Round "+round+"): ");
-            StringBuilder binOut = new StringBuilder();
-            for(int i=0; i<64; i++) {
-                if(i<32) {
-                    binOut.append(output[0][i]);
-                } else {
-                    binOut.append(output[1][i-32]);
-                }
-            }
-            BigInteger tempout = new BigInteger(""+binOut, 2);
-            System.out.println(tempout.toString(16)+"\n");
+            Functions.printHex(output, "Round "+round);
         }
         
         int binOutput[] = SingleRoundEncryption.finalRoundDES(output);

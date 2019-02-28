@@ -1,3 +1,6 @@
+
+import java.math.BigInteger;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -121,6 +124,35 @@ public class Functions {
             pOut[P[i]-1] = sboxIn[i]; 
         }
         return pOut;
+    }
+    
+    public static void printHex(int[] arr, String msg) {
+        StringBuilder temp = new StringBuilder();
+        for(int i=0; i<arr.length; i++) {
+            temp.append(arr[i]);
+        }
+        BigInteger temp2 = new BigInteger(""+temp, 2);
+        System.out.println("\nOutput of "+msg+" (in hex): "+temp2.toString(16));
+    }
+    
+    public static void printHex(StringBuilder temp, String msg) {
+        BigInteger temp2 = new BigInteger(""+temp, 2);
+        System.out.println("\nOutput of "+msg+" (in hex): "+temp2.toString(16));
+    }
+    
+    public static void printHex(int[][] in, String msg) {
+        int len = in[0].length+in[1].length;
+        StringBuilder temp = new StringBuilder();
+     
+        for(int i=0; i<len; i++) {
+            if(i<len/2) {
+                temp.append(in[0][i]);
+            } else {
+                temp.append(in[1][i-32]);
+            }
+        }
+        BigInteger temp2 = new BigInteger(""+temp, 2);
+        System.out.println("\nOutput of "+msg+" (in hex): "+temp2.toString(16));
     }
     
     public static int[] XOR(int[] bits1, int[] bits2) {
