@@ -42,6 +42,7 @@ public class Encrypt extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("DES Encryptor");
+        setResizable(false);
 
         jLabel1.setText("Text (Hex):");
 
