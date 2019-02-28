@@ -73,10 +73,15 @@ public class SingleRoundEncryption {
         int[] lefthalfbeforekey = in[2];
         int[] righthalfbeforekey = in[3];
         
-        // left circular shift by n bit for nth round
-        for(int i=0; i<round; i++) {
+        // left circular shift according to the schedule
+        if(round==1 || round==2 || round==9 || round==16) {
             lefthalfbeforekey = Functions.shiftCircularLeft(lefthalfbeforekey);
             righthalfbeforekey = Functions.shiftCircularLeft(righthalfbeforekey);
+        } else {
+            for(int i=1; i<3; i++) {
+                lefthalfbeforekey = Functions.shiftCircularLeft(lefthalfbeforekey);
+                righthalfbeforekey = Functions.shiftCircularLeft(righthalfbeforekey);
+            }
         }
         
         // perform expansion permutation of right half
@@ -85,7 +90,7 @@ public class SingleRoundEncryption {
             expperm[i] = righthalfbeforein[E[i]-1]; 
         }
         
-        // Expansion permutation for input done, move to key PC2 function
+        // Expansion permutation for input done, move to key processing
         
         // Permuted Choice 2
         int[] pc2out = new int[48];
@@ -98,13 +103,13 @@ public class SingleRoundEncryption {
             }
         }
         
-        // Back to input 
+        // Back to processing input 
         
         // XOR EP output and PC2 output
-        int[] xoroutput1 = Functions.XOR(expperm, pc2out);
+        int[] xorOutput1 = Functions.XOR(expperm, pc2out);
         
         // S-Box
-        int[] sboxOut = Functions.sBox(xoroutput1);
+        int[] sboxOut = Functions.sBox(xorOutput1);
 
         // Permutation after S
         int[] pOut = Functions.permutationFunction(sboxOut);
