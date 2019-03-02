@@ -12,6 +12,14 @@ import java.math.BigInteger;
  * @author yashr
  */
 public class Functions {
+    public static void printBinary(int[] bits, String msg) {
+        System.out.println("Output of "+msg+" (in binary):");
+        for(int i=0; i<bits.length; i++) {
+            System.out.print(i);
+        }
+        System.out.println();
+    }
+    
     public static int[] shiftCircularLeft(int[] bits) {
         int bit = bits[0];
         int length = bits.length - 1;

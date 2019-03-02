@@ -1,3 +1,8 @@
+
+
+
+import java.math.BigInteger;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -35,7 +40,7 @@ public class SingleRoundEncryption {
         // perform initial permutation
         int[] ipout = new int[64];
         for(int i=0; i<64; i++) {
-            ipout[IP[i]-1] = Character.getNumericValue(inputbin.charAt(i));
+            ipout[i] = Character.getNumericValue(inputbin.charAt(IP[i]-1));
         }
         
         // PC1
@@ -78,7 +83,7 @@ public class SingleRoundEncryption {
             lefthalfbeforekey = Functions.shiftCircularLeft(lefthalfbeforekey);
             righthalfbeforekey = Functions.shiftCircularLeft(righthalfbeforekey);
         } else {
-            for(int i=1; i<3; i++) {
+            for(int i=0; i<2; i++) {
                 lefthalfbeforekey = Functions.shiftCircularLeft(lefthalfbeforekey);
                 righthalfbeforekey = Functions.shiftCircularLeft(righthalfbeforekey);
             }

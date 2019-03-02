@@ -141,8 +141,7 @@ public class Encrypt extends javax.swing.JFrame {
         BigInteger key = new BigInteger(jTextField2.getText(), 16);
         StringBuilder inputbin = new StringBuilder(input.toString(2));
         StringBuilder keybin = new StringBuilder(key.toString(2));
-        System.out.println("Input hex: "+input.toString(16));
-        System.out.println("Key hex: "+key.toString(16));
+        
         
         if(inputbin.length()>64 || keybin.length()>64) {
             JOptionPane.showMessageDialog(rootPane, "Please enter 8 bytes of data only");
@@ -154,16 +153,19 @@ public class Encrypt extends javax.swing.JFrame {
         
         if(inputbin.length()<64 || keybin.length()<64) {
             for(int i=inputbin.length(); i<64; i++) {
-               // inputbin.reverse();
+                inputbin.reverse();
                 inputbin.append("0");
-               // inputbin.reverse();
+                inputbin.reverse();
             }
             for(int i=keybin.length(); i<64; i++) {
-              //  keybin.reverse();
+                keybin.reverse();
                 keybin.append("0");
-              //  keybin.reverse();
+                keybin.reverse();
             }
         }
+        
+        Functions.printHex(inputbin, "Input hex");
+        Functions.printHex(keybin, "Key hex");
 
         int output[][] = null;
         for(int round=1; round<=16; round++) {
