@@ -46,7 +46,7 @@ public class Encrypt extends javax.swing.JFrame {
 
         jLabel1.setText("Text (Hex):");
 
-        jTextField1.setText("02468aceeca86420");
+        jTextField1.setText("0123456789ABCDEF");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -62,7 +62,7 @@ public class Encrypt extends javax.swing.JFrame {
 
         jLabel2.setText("Key (Hex):");
 
-        jTextField2.setText("0f1571c947d9e859");
+        jTextField2.setText("133457799BBCDFF1");
         jTextField2.setToolTipText("");
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -164,26 +164,23 @@ public class Encrypt extends javax.swing.JFrame {
             }
         }
         
-        Functions.printHex(inputbin, "Input hex");
-        Functions.printHex(keybin, "Key hex");
-
         int output[][] = null;
         for(int round=1; round<=16; round++) {
             if(round == 1) {
-                output = SingleRoundEncryption.initDES(inputbin, keybin);
+                output = SingleRoundEncryption.initializeDES(inputbin, keybin);
             }
             output = SingleRoundEncryption.nRoundDES(round, output);
-            Functions.printHex(output, "Round "+round);
+            //Functions.printHex(output, "Round "+round);
         }
         
-        int binOutput[] = SingleRoundEncryption.finalRoundDES(output);
+        int binOutput[] = SingleRoundEncryption.finalizeDES(output);
        
         StringBuilder binOut = new StringBuilder();
         for(int i=0; i<binOutput.length; i++) {
             binOut.append(binOutput[i]);
         }
         BigInteger tempout = new BigInteger(""+binOut, 2);
-        jTextField3.setText(tempout.toString(16));
+        jTextField3.setText(tempout.toString(16).toUpperCase());
         System.out.println();
     }//GEN-LAST:event_jButton1ActionPerformed
 

@@ -13,14 +13,20 @@ import java.math.BigInteger;
  */
 public class Functions {
     public static void printBinary(int[] bits, String msg) {
-        System.out.println("Output of "+msg+" (in binary):");
+        System.out.println("\nOutput of "+msg+" (in binary):");
         for(int i=0; i<bits.length; i++) {
-            System.out.print(i);
+            System.out.print(bits[i]);
         }
         System.out.println();
     }
     
-    public static int[] shiftCircularLeft(int[] bits) {
+    public static void printBinary(StringBuilder bits, String msg) {
+        System.out.println("\nOutput of "+msg+" (in binary):");
+        System.out.print(bits);
+        System.out.println();
+    }
+    
+    public static int[] shiftCircularLeft(int[] bits, int count) {
         int bit = bits[0];
         int length = bits.length - 1;
         int[] output = new int[bits.length];
@@ -28,10 +34,14 @@ public class Functions {
         for (int i = 0; i < length; i++) {
             output[i] = bits[i + 1];
         }
-
         output[length] = bit;
-
-        return output;
+        
+        if(count == 1) {
+            return output;
+        } else {
+            count-=1;
+            return shiftCircularLeft(output, count);
+        } 
     }
     public static int[] sBox(int[] xorIn) {
         int S1[][] = {{14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7}, 
@@ -68,7 +78,8 @@ public class Functions {
                     {2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11}}; 
         // xorIn.length = 48;
         int[] sboxOut = new int[32];
-        StringBuilder sboxOutTemp = new StringBuilder();
+        StringBuilder sboxFullOutput = new StringBuilder();
+        StringBuilder sOutTempStr = null;
         for(int i=0; i<48; i+=6) {
             String binRow = ""+xorIn[i]+xorIn[i+5];
             String binColumn = ""+xorIn[i+1]+xorIn[i+2]+xorIn[i+3]+xorIn[i+4];
@@ -78,46 +89,46 @@ public class Functions {
             if(i == 0) {
                 // 0-5th bit use S1
                 sOut = S1[row][column];
-                sboxOutTemp.append(Integer.toBinaryString(sOut));
             }
             if(i == 6) {
                 // 6-11th bit use S2
                 sOut = S2[row][column];
-                sboxOutTemp.append(Integer.toBinaryString(sOut));
             }
             if(i == 12) {
                 // 12-17th bit use S3
                 sOut = S3[row][column];
-                sboxOutTemp.append(Integer.toBinaryString(sOut));
             }
             if(i == 18) {
                 // 18-23rd bit use S4
                 sOut = S4[row][column];
-                sboxOutTemp.append(Integer.toBinaryString(sOut));
             }
             if(i == 24) {
                 // 24-29th bit use S5
                 sOut = S5[row][column];
-                sboxOutTemp.append(Integer.toBinaryString(sOut));
             }
             if(i == 30) {
                 // 30-35th bit use S6
                 sOut = S6[row][column];
-                sboxOutTemp.append(Integer.toBinaryString(sOut));
             }
             if(i == 36) {
                 // 36-41st bit use S7
                 sOut = S7[row][column];
-                sboxOutTemp.append(Integer.toBinaryString(sOut));
             }
             if(i == 42) {
                 // 42-47th bit use S8
                 sOut = S8[row][column];
-                sboxOutTemp.append(Integer.toBinaryString(sOut));
             }
+            sOutTempStr = new StringBuilder(Integer.toBinaryString(sOut));
+            // make sure resulting binary string is length 4, as number can be less than 8
+            while(sOutTempStr.length() < 4) {
+                sOutTempStr.reverse();
+                sOutTempStr.append("0");
+                sOutTempStr.reverse();
+            }
+            sboxFullOutput.append(sOutTempStr);
         }
-        for(int i=0; i<sboxOutTemp.length(); i++) {
-            sboxOut[i] = Character.getNumericValue(sboxOutTemp.charAt(i));
+        for(int i=0; i<sboxFullOutput.length(); i++) {
+            sboxOut[i] = Character.getNumericValue(sboxFullOutput.charAt(i));
         }
         return sboxOut;
     }
@@ -129,7 +140,7 @@ public class Functions {
                    19, 13, 30, 6, 22, 11, 4, 25};
         int[] pOut = new int[sboxIn.length];
         for(int i=0; i<sboxIn.length; i++) {
-            pOut[P[i]-1] = sboxIn[i]; 
+            pOut[i] = sboxIn[P[i]-1]; 
         }
         return pOut;
     }
@@ -140,12 +151,12 @@ public class Functions {
             temp.append(arr[i]);
         }
         BigInteger temp2 = new BigInteger(""+temp, 2);
-        System.out.println("\nOutput of "+msg+" (in hex): "+temp2.toString(16));
+        System.out.println("\nOutput of "+msg+" (in hex): "+temp2.toString(16).toUpperCase());
     }
     
     public static void printHex(StringBuilder temp, String msg) {
         BigInteger temp2 = new BigInteger(""+temp, 2);
-        System.out.println("\nOutput of "+msg+" (in hex): "+temp2.toString(16));
+        System.out.println("\nOutput of "+msg+" (in hex): "+temp2.toString(16).toUpperCase());
     }
     
     public static void printHex(int[][] in, String msg) {
@@ -160,7 +171,7 @@ public class Functions {
             }
         }
         BigInteger temp2 = new BigInteger(""+temp, 2);
-        System.out.println("\nOutput of "+msg+" (in hex): "+temp2.toString(16));
+        System.out.println("\nOutput of "+msg+" (in hex): "+temp2.toString(16).toUpperCase());
     }
     
     public static int[] XOR(int[] bits1, int[] bits2) {

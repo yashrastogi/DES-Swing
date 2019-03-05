@@ -36,7 +36,7 @@ public class SingleRoundEncryption {
                      63, 55, 47, 39, 31, 23, 15, 7, 62, 54, 46, 38, 30, 22, 
                      14, 6, 61, 53, 45, 37, 29, 21, 13, 5, 28, 20, 12, 4};
     
-    public static int[][] initDES(StringBuilder inputbin, StringBuilder keybin) {
+    public static int[][] initializeDES(StringBuilder inputbin, StringBuilder keybin) {
         // perform initial permutation
         int[] ipout = new int[64];
         for(int i=0; i<64; i++) {
@@ -48,7 +48,7 @@ public class SingleRoundEncryption {
         for(int i=0; i<56; i++) {
             pc1out[i] = Character.getNumericValue(keybin.charAt(PC1[i]-1));
         }
-
+        
         // Split PC1 in 2 parts
         int[] lefthalfafterkey = new int[28];
         int[] righthalfafterkey = new int[28];
@@ -56,6 +56,7 @@ public class SingleRoundEncryption {
             lefthalfafterkey[i] = pc1out[i];
             righthalfafterkey[i] = pc1out[i+28];
         }
+        
         // Split Input after IP in 2 parts and feed both to nth round function
         int[] lefthalfafterin = new int[32];
         int[] righthalfafterin = new int[32];
@@ -80,13 +81,11 @@ public class SingleRoundEncryption {
         
         // left circular shift according to the schedule
         if(round==1 || round==2 || round==9 || round==16) {
-            lefthalfbeforekey = Functions.shiftCircularLeft(lefthalfbeforekey);
-            righthalfbeforekey = Functions.shiftCircularLeft(righthalfbeforekey);
+            lefthalfbeforekey = Functions.shiftCircularLeft(lefthalfbeforekey, 1);
+            righthalfbeforekey = Functions.shiftCircularLeft(righthalfbeforekey, 1);
         } else {
-            for(int i=0; i<2; i++) {
-                lefthalfbeforekey = Functions.shiftCircularLeft(lefthalfbeforekey);
-                righthalfbeforekey = Functions.shiftCircularLeft(righthalfbeforekey);
-            }
+            lefthalfbeforekey = Functions.shiftCircularLeft(lefthalfbeforekey, 2);
+            righthalfbeforekey = Functions.shiftCircularLeft(righthalfbeforekey, 2);
         }
         
         // perform expansion permutation of right half
@@ -111,8 +110,8 @@ public class SingleRoundEncryption {
         // Back to processing input 
         
         // XOR EP output and PC2 output
-        int[] xorOutput1 = Functions.XOR(expperm, pc2out);
-        
+        int[] xorOutput1 = Functions.XOR(pc2out, expperm);
+
         // S-Box
         int[] sboxOut = Functions.sBox(xorOutput1);
 
@@ -120,8 +119,8 @@ public class SingleRoundEncryption {
         int[] pOut = Functions.permutationFunction(sboxOut);
 
         // XOR Permutation2 and Left Half Before/Initial
-        int[] xorOutput2 = Functions.XOR(pOut, lefthalfbeforein);
-
+        int[] xorOutput2 = Functions.XOR(lefthalfbeforein, pOut);
+        
         // copy right half 32 bits to left half
         int[] lefthalfafterin = righthalfbeforein;
         int[] righthalfafterin = xorOutput2;
@@ -138,7 +137,7 @@ public class SingleRoundEncryption {
         return out;
     }
     
-    public static int[] finalRoundDES(int[][] in) {
+    public static int[] finalizeDES(int[][] in) {
         int[] lefthalfbeforein = in[0];
         int[] righthalfbeforein = in[1];
         
@@ -148,13 +147,18 @@ public class SingleRoundEncryption {
         lefthalfbeforein = temp;
         
         // IP Inverse
-        int[] ipInverseOut = new int[64];
+        int[] tempJoin = new int[64];
         for(int i=0; i<64; i++) {
             if(i>31) {
-                ipInverseOut[IP_Inverse[i]-1] = righthalfbeforein[i-32];
+                tempJoin[i] = righthalfbeforein[i-32];
             } else {
-                ipInverseOut[IP_Inverse[i]-1] = lefthalfbeforein[i];
+                tempJoin[i] = lefthalfbeforein[i];
             }
+        }
+        
+        int[] ipInverseOut = new int[64];
+        for(int i=0; i<64; i++) {
+            ipInverseOut[i] = tempJoin[IP_Inverse[i]-1];
         }
         
         return ipInverseOut;
