@@ -33,12 +33,14 @@ public class Encrypt extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        PlaintextTextField = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        KeyTextField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        OutputTextField = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        IVTextField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("DES Encryptor");
@@ -46,10 +48,10 @@ public class Encrypt extends javax.swing.JFrame {
 
         jLabel1.setText("Text (Hex):");
 
-        jTextField1.setText("0123456789ABCDEF");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        PlaintextTextField.setText("02468aceeca86420");
+        PlaintextTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                PlaintextTextFieldActionPerformed(evt);
             }
         });
 
@@ -62,20 +64,30 @@ public class Encrypt extends javax.swing.JFrame {
 
         jLabel2.setText("Key (Hex):");
 
-        jTextField2.setText("133457799BBCDFF1");
-        jTextField2.setToolTipText("");
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        KeyTextField.setText("0f1571c947d9e859");
+        KeyTextField.setToolTipText("");
+        KeyTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                KeyTextFieldActionPerformed(evt);
             }
         });
 
         jLabel3.setText("Output:");
 
-        jTextField3.setEditable(false);
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        OutputTextField.setEditable(false);
+        OutputTextField.setAutoscrolls(false);
+        OutputTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                OutputTextFieldActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("IV (Hex):");
+
+        IVTextField.setText("0000000000000000");
+        IVTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                IVTextFieldActionPerformed(evt);
             }
         });
 
@@ -85,20 +97,23 @@ public class Encrypt extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
-                            .addComponent(jTextField2)
-                            .addComponent(jTextField3)))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)))
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(IVTextField)
+                                .addComponent(PlaintextTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                                .addComponent(KeyTextField, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(OutputTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -106,64 +121,99 @@ public class Encrypt extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(PlaintextTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(KeyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(IVTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(75, 75, 75))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(OutputTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void PlaintextTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PlaintextTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_PlaintextTextFieldActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void KeyTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_KeyTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_KeyTextFieldActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private void OutputTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OutputTextFieldActionPerformed
         
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_OutputTextFieldActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        BigInteger input = new BigInteger(jTextField1.getText(), 16);
-        BigInteger key = new BigInteger(jTextField2.getText(), 16);
-        StringBuilder inputbin = new StringBuilder(input.toString(2));
-        StringBuilder keybin = new StringBuilder(key.toString(2));
-        
-        
-        if(inputbin.length()>64 || keybin.length()>64) {
-            JOptionPane.showMessageDialog(rootPane, "Please enter 8 bytes of data only");
-            this.dispose();
-            JFrame encrypt = new Encrypt();
-            encrypt.setVisible(true);
-            return;
-        }
-        
-        if(inputbin.length()<64 || keybin.length()<64) {
-            for(int i=inputbin.length(); i<64; i++) {
-                inputbin.reverse();
-                inputbin.append("0");
-                inputbin.reverse();
+        KeyTextField.setText(KeyTextField.getText().toUpperCase());
+        PlaintextTextField.setText(PlaintextTextField.getText().toUpperCase());
+        StringBuilder inputbin = new StringBuilder("");
+//        if(PlaintextTextField.getText().length()>16) {
+            int rounds1 = (int) Math.ceil((double) PlaintextTextField.getText().length()/16);
+            for(int i=0; i<rounds1; i++) {
+                BigInteger temp;
+                if(i == (rounds1-1) && PlaintextTextField.getText().length()<(i+1)*16) {
+                    temp = new BigInteger(PlaintextTextField.getText().substring(i*16, PlaintextTextField.getText().length()), 16);
+                } else {
+                    temp = new BigInteger(PlaintextTextField.getText().substring(i*16, (i+1)*16), 16);
+                }
+                inputbin.append(Functions.fillZeroBin(new StringBuilder(temp.toString(2)),64));
             }
-            for(int i=keybin.length(); i<64; i++) {
-                keybin.reverse();
-                keybin.append("0");
-                keybin.reverse();
+//        } 
+        
+        BigInteger key = new BigInteger(KeyTextField.getText(), 16);
+        BigInteger iv = new BigInteger(IVTextField.getText(), 16);
+        StringBuilder keybin = Functions.fillZeroBin(new StringBuilder(key.toString(2)), 64);
+        StringBuilder ivbin = Functions.fillZeroBin(new StringBuilder(iv.toString(2)), 64);
+        String outputRound="";
+        String output="";
+        
+
+        int rounds = (int) Math.ceil((double) inputbin.length()/64);
+        StringBuilder xorInput = null;
+        StringBuilder inputSubStr = null;
+        for(int i=0; i<rounds; i++) {
+//            if(i == rounds-1 && inputbin.length() < (i+1)*64) {
+//                inputbin = Functions.fillZeroBin(inputbin, (i+1)*64);
+//            }
+            if(inputbin.length()<(i+1)*64) {
+                inputSubStr = new StringBuilder(inputbin.substring(i*64, inputbin.length()));
+                inputSubStr = Functions.fillZeroBin(inputSubStr, 64);
+            } else {
+                inputSubStr = new StringBuilder(inputbin.substring(i*64, (i+1)*64));
+            }
+            
+            if(inputSubStr.length()<64) {
+                inputSubStr = Functions.fillZeroBin(inputSubStr, 64);
+            }
+            if(i == 0) {
+                xorInput = Functions.XOR(inputSubStr, ivbin);
+                outputRound = SingleBlockEncryptor(xorInput, keybin).toString(2);
+                output = output + SingleBlockEncryptor(xorInput, keybin).toString(16);
+            } else {
+                xorInput = Functions.XOR(inputSubStr, Functions.fillZeroBin(new StringBuilder(outputRound), 64));
+                outputRound = SingleBlockEncryptor(xorInput, keybin).toString(2);
+                output = output + " " + SingleBlockEncryptor(xorInput, keybin).toString(16);
             }
         }
-        
+        OutputTextField.setText(output.toUpperCase());
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private BigInteger SingleBlockEncryptor(StringBuilder inputbin, StringBuilder keybin) {
         int output[][] = null;
         for(int round=1; round<=16; round++) {
             if(round == 1) {
@@ -179,9 +229,12 @@ public class Encrypt extends javax.swing.JFrame {
         for(int i=0; i<binOutput.length; i++) {
             binOut.append(binOutput[i]);
         }
-        BigInteger tempout = new BigInteger(""+binOut, 2);
-        jTextField3.setText(tempout.toString(16).toUpperCase());
-    }//GEN-LAST:event_jButton1ActionPerformed
+        return new BigInteger(""+binOut, 2);
+    }
+    
+    private void IVTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IVTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_IVTextFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -219,12 +272,14 @@ public class Encrypt extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField IVTextField;
+    private javax.swing.JTextField KeyTextField;
+    private javax.swing.JTextField OutputTextField;
+    private javax.swing.JTextField PlaintextTextField;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JLabel jLabel4;
     // End of variables declaration//GEN-END:variables
 }

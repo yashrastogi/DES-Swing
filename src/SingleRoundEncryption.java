@@ -99,7 +99,6 @@ public class SingleRoundEncryption {
         // Permuted Choice 2
         int[] pc2out = new int[48];
         for(int i=0; i<48; i++) {
-            //System.out.println("PC2["+i+"]: "+PC2[i]);
             if(PC2[i]>28) {
                 pc2out[i] = righthalfbeforekey[PC2[i]-28-1];
             } else {

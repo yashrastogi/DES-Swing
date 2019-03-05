@@ -185,4 +185,30 @@ public class Functions {
         }
         return xorOut;
     }
+    
+    public static StringBuilder XOR(StringBuilder bits1, StringBuilder bits2) {
+        // XOR same length Binary int arrays
+        StringBuilder xorOut = new StringBuilder("");
+        if(bits1.length()!=bits2.length()) {
+            System.out.println("not performing xor; bits1 length: "+bits1.length()+" | bits2 length: "+bits2.length());
+            return null;
+        }
+        for(int i=0; i<bits1.length(); i++) {
+            xorOut.append(Character.getNumericValue(bits1.charAt(i)) ^ Character.getNumericValue(bits2.charAt(i)));
+        }
+        return xorOut;
+    }
+    
+    public static StringBuilder fillZeroBin(StringBuilder bits, int length) {
+        if(bits.length()<length) {
+            
+            for(int i=bits.length(); i<length; i++) {
+                bits.reverse();
+                bits.append("0");
+                bits.reverse();
+            }
+            
+        }
+        return bits;
+    }
 }
