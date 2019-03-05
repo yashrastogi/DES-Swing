@@ -181,7 +181,6 @@ public class Encrypt extends javax.swing.JFrame {
         }
         BigInteger tempout = new BigInteger(""+binOut, 2);
         jTextField3.setText(tempout.toString(16).toUpperCase());
-        System.out.println();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
