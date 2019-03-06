@@ -86,7 +86,9 @@ public class Encrypt extends javax.swing.JFrame {
 
         OutputTextField.setEditable(false);
         OutputTextField.setColumns(20);
+        OutputTextField.setLineWrap(true);
         OutputTextField.setRows(5);
+        OutputTextField.setWrapStyleWord(true);
         jScrollPane1.setViewportView(OutputTextField);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

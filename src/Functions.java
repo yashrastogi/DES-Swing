@@ -120,11 +120,11 @@ public class Functions {
             }
             sOutTempStr = new StringBuilder(Integer.toBinaryString(sOut));
             // make sure resulting binary string is length 4, as number can be less than 8
+            sOutTempStr.reverse();
             while(sOutTempStr.length() < 4) {
-                sOutTempStr.reverse();
                 sOutTempStr.append("0");
-                sOutTempStr.reverse();
             }
+            sOutTempStr.reverse();
             sboxFullOutput.append(sOutTempStr);
         }
         for(int i=0; i<sboxFullOutput.length(); i++) {
