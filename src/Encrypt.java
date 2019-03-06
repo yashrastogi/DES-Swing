@@ -1,13 +1,11 @@
 
 import java.math.BigInteger;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * and0 o000000000000000000000000000000000000000000000000000000000000000000000000000000000000p0en the template in the editor.
  */
 
 /**
@@ -108,11 +106,11 @@ public class Encrypt extends javax.swing.JFrame {
                                     .addComponent(jLabel1)
                                     .addComponent(jLabel2)
                                     .addComponent(jLabel4))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(KeyTextField)
                                     .addComponent(IVTextField)
-                                    .addComponent(PlaintextTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
-                                    .addComponent(KeyTextField, javax.swing.GroupLayout.Alignment.TRAILING)))
+                                    .addComponent(PlaintextTextField)))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addGap(18, 18, 18)
@@ -158,44 +156,34 @@ public class Encrypt extends javax.swing.JFrame {
         KeyTextField.setText(KeyTextField.getText().toUpperCase());
         PlaintextTextField.setText(PlaintextTextField.getText().toUpperCase());
         StringBuilder inputbin = new StringBuilder("");
-//        if(PlaintextTextField.getText().length()>16) {
-            int rounds1 = (int) Math.ceil((double) PlaintextTextField.getText().length()/16);
-            for(int i=0; i<rounds1; i++) {
-                BigInteger temp;
-                if(i == (rounds1-1) && PlaintextTextField.getText().length()<(i+1)*16) {
-                    temp = new BigInteger(PlaintextTextField.getText().substring(i*16, PlaintextTextField.getText().length()), 16);
-                } else {
-                    temp = new BigInteger(PlaintextTextField.getText().substring(i*16, (i+1)*16), 16);
-                }
-                inputbin.append(Functions.fillZeroBin(new StringBuilder(temp.toString(2)),64));
+        
+        // Cipher Block Chaining
+        // No. of blocks required to be encrypted
+        int blocks = (int) Math.ceil((double) PlaintextTextField.getText().length()/16);
+        for(int i=0; i<blocks; i++) {
+            BigInteger temp;
+            // If last block and last block length < 64 take whatever left
+            if(i == (blocks-1) && PlaintextTextField.getText().length()<(i+1)*16) {
+                temp = new BigInteger(PlaintextTextField.getText().substring(i*16, PlaintextTextField.getText().length()), 16);
+            } else {
+                temp = new BigInteger(PlaintextTextField.getText().substring(i*16, (i+1)*16), 16);
             }
-//        } 
+            // Take 16 hex chars at a time and append its 64 bit binary
+            // (filled with 0's to the left if required)
+            inputbin.append(Functions.fillZeroBin(new StringBuilder(temp.toString(2)),64));
+        }
         
         BigInteger key = new BigInteger(KeyTextField.getText(), 16);
         BigInteger iv = new BigInteger(IVTextField.getText(), 16);
         StringBuilder keybin = Functions.fillZeroBin(new StringBuilder(key.toString(2)), 64);
         StringBuilder ivbin = Functions.fillZeroBin(new StringBuilder(iv.toString(2)), 64);
+        
         String outputRound="";
         String output="";
-        
-
-        int rounds = (int) Math.ceil((double) inputbin.length()/64);
-        StringBuilder xorInput = null;
-        StringBuilder inputSubStr = null;
-        for(int i=0; i<rounds; i++) {
-//            if(i == rounds-1 && inputbin.length() < (i+1)*64) {
-//                inputbin = Functions.fillZeroBin(inputbin, (i+1)*64);
-//            }
-            if(inputbin.length()<(i+1)*64) {
-                inputSubStr = new StringBuilder(inputbin.substring(i*64, inputbin.length()));
-                inputSubStr = Functions.fillZeroBin(inputSubStr, 64);
-            } else {
-                inputSubStr = new StringBuilder(inputbin.substring(i*64, (i+1)*64));
-            }
-            
-            if(inputSubStr.length()<64) {
-                inputSubStr = Functions.fillZeroBin(inputSubStr, 64);
-            }
+        StringBuilder xorInput;
+        StringBuilder inputSubStr;
+        for(int i=0; i<blocks; i++) {
+            inputSubStr = new StringBuilder(inputbin.substring(i*64, (i+1)*64));
             if(i == 0) {
                 xorInput = Functions.XOR(inputSubStr, ivbin);
                 outputRound = SingleBlockEncryptor(xorInput, keybin).toString(2);

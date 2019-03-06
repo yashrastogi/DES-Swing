@@ -123,7 +123,6 @@ public class SingleRoundEncryption {
         // copy right half 32 bits to left half
         int[] lefthalfafterin = righthalfbeforein;
         int[] righthalfafterin = xorOutput2;
-        
         int[] lefthalfafterkey = lefthalfbeforekey;
         int[] righthalfafterkey = righthalfbeforekey;
         
