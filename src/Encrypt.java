@@ -1,4 +1,6 @@
 import java.math.BigInteger;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /*
@@ -155,6 +157,14 @@ public class Encrypt extends javax.swing.JFrame {
         KeyTextField.setText(KeyTextField.getText().toUpperCase());
         PlaintextTextField.setText(PlaintextTextField.getText().toUpperCase());
         StringBuilder inputbin = new StringBuilder("");
+        
+        if(IVTextField.getText().length() > 16 || KeyTextField.getText().length() > 16) {
+            JOptionPane.showMessageDialog(rootPane, "Please enter only 8 bytes of data in Key/IV");
+            this.dispose();
+            JFrame encrypt = new Encrypt();
+            encrypt.setVisible(true);
+            return; 
+        }
         
         // Cipher Block Chaining
         // No. of blocks required to be encrypted
