@@ -1,11 +1,10 @@
-
 import java.math.BigInteger;
 import javax.swing.UIManager;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
- * and0 o000000000000000000000000000000000000000000000000000000000000000000000000000000000000p0en the template in the editor.
+ * and open the template in the editor.
  */
 
 /**
@@ -204,7 +203,6 @@ public class Encrypt extends javax.swing.JFrame {
                 output = SingleRoundEncryption.initializeDES(inputbin, keybin);
             }
             output = SingleRoundEncryption.nRoundDES(round, output);
-            //Functions.printHex(output, "Round "+round);
         }
         
         int binOutput[] = SingleRoundEncryption.finalizeDES(output);

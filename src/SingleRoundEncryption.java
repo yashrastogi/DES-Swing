@@ -1,8 +1,3 @@
-
-
-
-import java.math.BigInteger;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -14,6 +9,10 @@ import java.math.BigInteger;
  * @author yashr
  */
 public class SingleRoundEncryption {
+    static int P[] = {16, 7, 20, 21, 29, 12, 28, 17, 
+                    1, 15, 23, 26, 5, 18, 31, 10, 
+                    2, 8, 24, 14, 32, 27, 3, 9, 
+                   19, 13, 30, 6, 22, 11, 4, 25};
     static int E[] = {32, 1, 2, 3, 4, 5, 4, 5, 6, 7, 8, 9, 
                     8, 9, 10, 11, 12, 13, 12, 13, 14, 15, 16, 17, 
                    16, 17, 18, 19, 20, 21, 20, 21, 22, 23, 24, 25, 
@@ -89,10 +88,7 @@ public class SingleRoundEncryption {
         }
         
         // perform expansion permutation of right half
-        int[] expperm = new int[48];
-        for(int i=0; i<48; i++) {
-            expperm[i] = righthalfbeforein[E[i]-1]; 
-        }
+        int[] expperm = Functions.doPermutation(righthalfbeforein, E);
         
         // Expansion permutation for input done, move to key processing
         
@@ -115,7 +111,7 @@ public class SingleRoundEncryption {
         int[] sboxOut = Functions.sBox(xorOutput1);
 
         // Permutation after S
-        int[] pOut = Functions.permutationFunction(sboxOut);
+        int[] pOut = Functions.doPermutation(sboxOut, P);
 
         // XOR Permutation2 and Left Half Before/Initial
         int[] xorOutput2 = Functions.XOR(lefthalfbeforein, pOut);
@@ -144,7 +140,6 @@ public class SingleRoundEncryption {
         righthalfbeforein = lefthalfbeforein;
         lefthalfbeforein = temp;
         
-        // IP Inverse
         int[] tempJoin = new int[64];
         for(int i=0; i<64; i++) {
             if(i>31) {
@@ -154,10 +149,8 @@ public class SingleRoundEncryption {
             }
         }
         
-        int[] ipInverseOut = new int[64];
-        for(int i=0; i<64; i++) {
-            ipInverseOut[i] = tempJoin[IP_Inverse[i]-1];
-        }
+        // IP Inverse
+        int[] ipInverseOut = Functions.doPermutation(tempJoin, IP_Inverse);
         
         return ipInverseOut;
     }

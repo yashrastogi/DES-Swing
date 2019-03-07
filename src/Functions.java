@@ -133,14 +133,10 @@ public class Functions {
         return sboxOut;
     }
     
-    public static int[] permutationFunction(int[] sboxIn) {
-        int P[] = {16, 7, 20, 21, 29, 12, 28, 17, 
-                    1, 15, 23, 26, 5, 18, 31, 10, 
-                    2, 8, 24, 14, 32, 27, 3, 9, 
-                   19, 13, 30, 6, 22, 11, 4, 25};
-        int[] pOut = new int[sboxIn.length];
-        for(int i=0; i<sboxIn.length; i++) {
-            pOut[i] = sboxIn[P[i]-1]; 
+    public static int[] doPermutation(int[] bits, int[] permutationTable) {
+        int[] pOut = new int[permutationTable.length];
+        for(int i=0; i<permutationTable.length; i++) {
+            pOut[i] = bits[permutationTable[i]-1]; 
         }
         return pOut;
     }
@@ -201,13 +197,11 @@ public class Functions {
     
     public static StringBuilder fillZeroBin(StringBuilder bits, int length) {
         if(bits.length()<length) {
-            
+            bits.reverse();
             for(int i=bits.length(); i<length; i++) {
-                bits.reverse();
                 bits.append("0");
-                bits.reverse();
             }
-            
+            bits.reverse();
         }
         return bits;
     }
